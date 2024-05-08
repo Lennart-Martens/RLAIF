@@ -72,38 +72,51 @@ def add_answers(prompts:list, model) -> list:
     :return: A list of prompt-response tuples
     """
     pairs = []
-    for x in tqdm(prompts):
+    for prompt in tqdm(prompts):
         success = False
         while success is False:
             time.sleep(9)
             try:
-                response = model.generate_content([x]).text
+                response = model.generate_content([prompt]).text
                 response = response.replace("\n", "")
                 success = True
             except:
                 pass
-        pairs.append((x, response))
+        pairs.append((prompt, response))
     return pairs
 
 
-def fine_tuning_data(query_prompt:str, query_num:int, response_instruction:str, jsonl_location:str) -> int:
+def fine_tuning_data(query_request:list, response_instruction:str, jsonl_location:str) -> int:
     """
     Creates a JSONL file to perform supervised fine-tuning on a model
 
-    :param query_prompt: Describes the type of prompts to be generated
-    :param query_num: The ideal number of prompts to be generated
+    :param query_request: A list of prompts and the number of times each should be generated
     :param response_instruction: Describes how prompts should be answered
     :param jsonl_location: The name and location of the file to be created
     :return: Zero, when the JSONL is generated successfully
     """
-    prompts = question_list(query_prompt, query_num)
+    prompts = []
+    for request in tqdm(query_request):
+        success = False
+        while success is False:
+            time.sleep(9)
+            try:
+                subset = question_list(request[0], request[1])
+                success = True
+            except:
+                pass
+        for result in subset:
+            prompts.append(result)
+    
     model = build_llm(response_instruction)
     pairs = add_answers(prompts, model)
 
     with open(jsonl_location, 'w', encoding="utf-8") as file:
         for pair in pairs:
-            message1 = f'{{"role": "user", "content": "{ pair[0].replace('"', '\\"') }"}}'
-            message2 = f'{{"role": "model", "content": "{ pair[1].replace('"', '\\"') }"}}'
+            clean0 = pair[0].replace('"', '\\"')
+            clean1 = pair[1].replace('"', '\\"')
+            message1 = f'{{"role": "user", "content": "{ clean0 }"}}'
+            message2 = f'{{"role": "model", "content": "{ clean1 }"}}'
             full = f'{{"messages": [{ message1 }, { message2 }]}}\n'
             file.write(full)
     
