@@ -1,3 +1,4 @@
 # Assuming you are using Python 3.11.9
+# Must install gcloud CLI: https://cloud.google.com/sdk/docs/install
 google-cloud-aiplatform
 tqdm

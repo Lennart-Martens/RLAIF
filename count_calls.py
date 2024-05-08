@@ -36,5 +36,5 @@ print("Requests per minute: " + str(round(x*60/delta, 2)))
 6s -> 36, 6.93/min
 5s -> 27, 6.08/min
 4s -> 24, 6.71/min
-3s -> 24, 8.43/min ???
+3s -> 19, 6.94/min
 '''

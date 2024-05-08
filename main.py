@@ -15,7 +15,8 @@ response_guide = "Respond as though you are Spock, a cold, logical, efficient co
 fine_tuning_data(prompts, response_guide, './spock.jsonl')
 """
 
-""" # Example of chat instance
-model = build_llm("", "projects/82091501274/locations/us-central1/endpoints/8049364098250440704")
+# Example of chat instance
+# Dave - projects/82091501274/locations/us-central1/endpoints/8049364098250440704
+# Spock - projects/82091501274/locations/us-central1/endpoints/2505151481980649472
+model = build_llm("", "projects/82091501274/locations/us-central1/endpoints/2505151481980649472")
 run_chat(model)
-"""
